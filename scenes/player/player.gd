@@ -62,6 +62,14 @@ func _input(event):
 	# Lock on input
 	if event.is_action_pressed("lock_on"):
 		_toggle_lock_on()
+		
+	# Lock on input
+	if event.is_action_pressed("lock_on"):
+		_toggle_lock_on()
+
+	# Interact with resource nodes and NPCs
+	if event.is_action_pressed("interact"):
+		_try_interact()
 
 # ── PHYSICS LOOP ───────────────────────────────────
 func _physics_process(delta):
@@ -187,3 +195,31 @@ func _capture_mouse():
 func _release_mouse():
 	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	_mouse_captured = false
+
+# ── INTERACTION ────────────────────────────────────
+func _try_interact():
+	var closest = null
+	var closest_dist = 4.0
+
+	# Check resource nodes
+	for node in get_tree().get_nodes_in_group("resource_nodes"):
+		var dist = global_position.distance_to(node.global_position)
+		if dist < closest_dist:
+			closest_dist = dist
+			closest = node
+
+	# Check NPCs
+	for npc in get_tree().get_nodes_in_group("npcs"):
+		var dist = global_position.distance_to(npc.global_position)
+		if dist < closest_dist:
+			closest_dist = dist
+			closest = npc
+
+	# Interact with whatever is closest
+	if closest != null:
+		if closest.is_in_group("resource_nodes"):
+			closest.try_interact(self)
+		elif closest.is_in_group("npcs"):
+			closest.interact(self)
+	else:
+		print("Nothing nearby to interact with")

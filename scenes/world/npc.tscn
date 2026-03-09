@@ -1,0 +1,20 @@
+[gd_scene load_steps=5 format=3 uid="uid://dd5trnwndppfa"]
+
+[ext_resource type="Script" path="res://scenes/world/npc.gd" id="1_osmkr"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_qom3k"]
+albedo_color = Color(0.0470588, 0, 0.921569, 1)
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_pgss7"]
+material = SubResource("StandardMaterial3D_qom3k")
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_edq88"]
+
+[node name="NPC" type="StaticBody3D"]
+script = ExtResource("1_osmkr")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_pgss7")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_edq88")
