@@ -1,4 +1,4 @@
-[gd_scene load_steps=8 format=3 uid="uid://bj4q7khofggqo"]
+[gd_scene load_steps=11 format=3 uid="uid://bj4q7khofggqo"]
 
 [ext_resource type="PackedScene" uid="uid://3v2c5hj2fmld" path="res://scenes/player/player.tscn" id="1_hqnic"]
 [ext_resource type="PackedScene" uid="uid://di524ib58xvk1" path="res://scenes/enemies/Enemy.tscn" id="2_6qk6s"]
@@ -6,6 +6,9 @@
 [ext_resource type="PackedScene" uid="uid://cr6auq5756sg3" path="res://scenes/world/Rock.tscn" id="4_a2506"]
 [ext_resource type="PackedScene" uid="uid://cwspmdnytmn2q" path="res://scenes/world/Tree.tscn" id="5_bsq45"]
 [ext_resource type="PackedScene" uid="uid://y2l121501evx" path="res://scenes/world/Fish_Spot.tscn" id="6_ncj5h"]
+[ext_resource type="PackedScene" uid="uid://cloy4qe5bf2kv" path="res://scenes/ui/hud.tscn" id="7_whx8n"]
+[ext_resource type="PackedScene" uid="uid://bw51a1ethq244" path="res://scenes/ui/skills_panel.tscn" id="8_cjh4h"]
+[ext_resource type="PackedScene" uid="uid://cf5jdxj8j5ysm" path="res://scenes/ui/inventory_ui.tscn" id="9_na32j"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_gyhjv"]
 
@@ -55,3 +58,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, -0.5, 10)
 
 [node name="FishingSpot2" parent="." instance=ExtResource("6_ncj5h")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -0.5, 12)
+
+[node name="HUD" parent="." instance=ExtResource("7_whx8n")]
+
+[node name="SkillsPanel" parent="." instance=ExtResource("8_cjh4h")]
+
+[node name="InventoryUI" parent="." instance=ExtResource("9_na32j")]

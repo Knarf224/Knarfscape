@@ -70,6 +70,17 @@ func _input(event):
 	# Interact with resource nodes and NPCs
 	if event.is_action_pressed("interact"):
 		_try_interact()
+	
+# Toggle UI panels
+	if event.is_action_pressed("toggle_skills"):
+		var panel = get_tree().get_first_node_in_group("skills_panel")
+		if panel:
+			panel.toggle_visible()
+
+	if event.is_action_pressed("toggle_inventory"):
+		var inv = get_tree().get_first_node_in_group("inventory_ui")
+		if inv:
+			inv.toggle_visible()
 
 # ── PHYSICS LOOP ───────────────────────────────────
 func _physics_process(delta):

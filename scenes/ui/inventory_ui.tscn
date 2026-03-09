@@ -1,0 +1,27 @@
+[gd_scene load_steps=2 format=3 uid="uid://cf5jdxj8j5ysm"]
+
+[ext_resource type="Script" path="res://scenes/ui/inventory_ui.gd" id="1_eusjq"]
+
+[node name="InventoryUI" type="CanvasLayer" groups=["inventory_ui"]]
+script = ExtResource("1_eusjq")
+
+[node name="Background" type="Panel" parent="."]
+offset_left = 20.0
+offset_top = 80.0
+offset_right = 200.0
+offset_bottom = 480.0
+
+[node name="Title" type="Label" parent="Background"]
+offset_left = 10.0
+offset_top = 8.0
+offset_right = 101.0
+offset_bottom = 31.0
+text = "INVENTORY"
+
+[node name="Grid" type="GridContainer" parent="Background"]
+layout_mode = 0
+offset_left = 8.0
+offset_top = 35.0
+offset_right = 48.0
+offset_bottom = 75.0
+columns = 4

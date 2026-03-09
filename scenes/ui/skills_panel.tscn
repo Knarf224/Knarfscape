@@ -1,0 +1,25 @@
+[gd_scene load_steps=2 format=3 uid="uid://bw51a1ethq244"]
+
+[ext_resource type="Script" path="res://scenes/ui/skills_panel.gd" id="1_tdt37"]
+
+[node name="SkillsPanel" type="CanvasLayer" groups=["skills_panel"]]
+script = ExtResource("1_tdt37")
+
+[node name="Background" type="Panel" parent="."]
+offset_left = 1100.0
+offset_top = 20.0
+offset_right = 1260.0
+offset_bottom = 420.0
+
+[node name="SkillList" type="VBoxContainer" parent="Background"]
+offset_left = 10.0
+offset_top = 10.0
+offset_right = 150.0
+offset_bottom = 390.0
+
+[node name="Title" type="Label" parent="Background"]
+offset_left = 10.0
+offset_top = 2.0
+offset_right = 61.0
+offset_bottom = 25.0
+text = "SKILLS"

@@ -176,6 +176,9 @@ func _die():
 		GameManager.skills.add_xp("hitpoints", xp_reward * 0.33)
 		GameManager.skills.add_xp("attack", xp_reward * 0.33)
 		GameManager.skills.add_xp("strength", xp_reward * 0.33)
+		
+	# Update quest objectives
+	QuestManager.update_quest_objective("first_blood", 0)
 
 	# Remove from scene after short delay
 	await get_tree().create_timer(0.5).timeout

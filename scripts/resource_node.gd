@@ -82,6 +82,12 @@ func _complete_harvest():
 		print("Gathered " + str(harvest_amount) + "x " + item_name + "!")
 	else:
 		print("Inventory full!")
+		
+	# Update quest objectives based on what was gathered
+	if item_id == "logs":
+		QuestManager.update_quest_objective("woodcutter", 0)
+	elif item_id == "ore":
+		QuestManager.update_quest_objective("miner", 0)
 
 	# Deplete the node
 	state = State.DEPLETED
