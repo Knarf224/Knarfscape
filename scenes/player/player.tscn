@@ -1,4 +1,4 @@
-[gd_scene load_steps=4 format=3 uid="uid://3v2c5hj2fmld"]
+[gd_scene load_steps=5 format=3 uid="uid://3v2c5hj2fmld"]
 
 [ext_resource type="Script" path="res://scenes/player/player.gd" id="1_gotlb"]
 
@@ -6,7 +6,9 @@
 
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_qj7q1"]
 
-[node name="Player" type="CharacterBody3D"]
+[sub_resource type="BoxShape3D" id="BoxShape3D_ycmp0"]
+
+[node name="Player" type="CharacterBody3D" groups=["players"]]
 script = ExtResource("1_gotlb")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
@@ -21,3 +23,9 @@ spring_length = 5.0
 
 [node name="Camera3D" type="Camera3D" parent="SpringArm3D"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+
+[node name="HitBox" type="Area3D" parent="."]
+
+[node name="HitBoxShape" type="CollisionShape3D" parent="HitBox"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -1)
+shape = SubResource("BoxShape3D_ycmp0")

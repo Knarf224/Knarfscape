@@ -1,0 +1,30 @@
+[gd_scene load_steps=6 format=3 uid="uid://di524ib58xvk1"]
+
+[ext_resource type="Script" path="res://scenes/enemies/enemy.gd" id="1_cc6mi"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_xa2kj"]
+
+[sub_resource type="CapsuleMesh" id="CapsuleMesh_y08av"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7s74s"]
+albedo_color = Color(0.726962, 0.105748, 0, 1)
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_ms4ju"]
+radius = 10.0
+
+[node name="Enemy" type="CharacterBody3D"]
+script = ExtResource("1_cc6mi")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("CapsuleShape3D_xa2kj")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("CapsuleMesh_y08av")
+surface_material_override/0 = SubResource("StandardMaterial3D_7s74s")
+
+[node name="NavigationAgent3D" type="NavigationAgent3D" parent="."]
+
+[node name="DetectionZone" type="Area3D" parent="."]
+
+[node name="DetectionShape" type="CollisionShape3D" parent="DetectionZone"]
+shape = SubResource("SphereShape3D_ms4ju")
