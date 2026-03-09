@@ -14,6 +14,11 @@ config/name="Knarfscape"
 run/main_scene="res://scenes/world/main_world.tscn"
 config/features=PackedStringArray("4.3", "Forward Plus")
 
+[autoload]
+
+GameManager="*res://scripts/game_manager.gd"
+SaveSystem="*res://scripts/save_system.gd"
+
 [input]
 
 move_forward={
