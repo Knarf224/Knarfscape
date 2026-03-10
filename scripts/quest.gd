@@ -17,7 +17,7 @@ signal quest_completed(quest_id: String)
 
 func start_quest() -> void:
 	status = Status.ACTIVE
-	print("Quest started: " + quest_name)
+	ChatLog.add_message("Quest started: " + quest_name, "quest")
 
 func update_objective(index: int, amount: int = 1) -> void:
 	if status != Status.ACTIVE:
@@ -32,7 +32,7 @@ func update_objective(index: int, amount: int = 1) -> void:
 
 	if objectives[index]["current"] >= objectives[index]["required"]:
 		objectives[index]["completed"] = true
-		print("Objective complete: " + objectives[index]["description"])
+		ChatLog.add_message("Objective complete: " + objectives[index]["description"], "quest")
 
 	emit_signal("objective_updated", quest_id)
 	_check_completion()
@@ -43,7 +43,6 @@ func _check_completion() -> void:
 			return
 	status = Status.COMPLETED
 	emit_signal("quest_completed", quest_id)
-	print("Quest completed: " + quest_name + "!")
 
 func is_complete() -> bool:
 	return status == Status.COMPLETED

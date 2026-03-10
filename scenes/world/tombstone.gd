@@ -18,12 +18,12 @@ func store_items(inventory_slots: Array) -> void:
 				"value": slot["item"].value,
 				"quantity": slot["quantity"]
 			})
-	print("Tombstone created with " + str(stored_items.size()) + " item stacks")
+	ChatLog.add_message("Your grave contains " + str(stored_items.size()) + " item stacks.", "system")
 
 func interact(player) -> void:
 	var dist = player.global_position.distance_to(global_position)
 	if dist > INTERACT_DISTANCE:
-		print("Too far away from your grave!")
+		ChatLog.add_message("You are too far away from your grave!", "system")
 		return
 
 	# Return all items to inventory
@@ -38,6 +38,6 @@ func interact(player) -> void:
 		GameManager.inventory.add_item(item, saved["quantity"])
 		recovered += 1
 
-	print("Recovered " + str(recovered) + " item stacks from your grave!")
+	ChatLog.add_message("Recovered " + str(recovered) + " item stacks from your grave!", "system")
 	stored_items.clear()
 	queue_free()

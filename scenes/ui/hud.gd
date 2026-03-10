@@ -52,5 +52,5 @@ func _check_interaction_prompt():
 	interaction_prompt.visible = show_prompt
 
 func _on_skill_leveled_up(skill_name: String, new_level: int):
-	print("LEVEL UP! " + skill_name.capitalize() + " → " + str(new_level))
+	ChatLog.add_message("LEVEL UP! " + skill_name.capitalize() + " → " + str(new_level), "xp")
 	# We'll add a visual level up effect here in Phase 7

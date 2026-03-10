@@ -149,7 +149,7 @@ func _do_attack(delta):
 			var defence_reduction = GameManager.skills.get_level("defence") * 0.2
 			var final_damage = max(1.0, attack_damage - defence_reduction)
 			GameManager.stats.take_damage(final_damage)
-			print(enemy_name + " hits player for " + str(final_damage) + " damage! Player HP: " + str(GameManager.stats.health_current))
+			ChatLog.add_message(enemy_name + " hits you for " + str(int(final_damage)) + " damage!", "combat")
 			# Grant defence XP for being hit
 			GameManager.skills.add_xp("defence", 3.0)
 
@@ -165,7 +165,7 @@ func take_damage(amount: float):
 		return
 	current_health -= amount
 	_update_health_label()
-	print(enemy_name + " takes " + str(amount) + " damage! HP: " + str(current_health) + "/" + str(max_health))
+	ChatLog.add_message(enemy_name + " takes " + str(int(amount)) + " damage! HP: " + str(int(current_health)) + "/" + str(int(max_health)), "combat")
 	if _player == null:
 		_player = get_tree().get_first_node_in_group("players")
 	state = State.CHASE
@@ -176,7 +176,7 @@ func take_damage(amount: float):
 func _die():
 	state = State.DEAD
 	velocity = Vector3.ZERO
-	print(enemy_name + " has been defeated!")
+	ChatLog.add_message(enemy_name + " has been defeated!", "combat")
 
 	if GameManager.skills:
 		GameManager.skills.add_xp("hitpoints", xp_reward * 0.33)
@@ -199,7 +199,7 @@ func _die():
 	_do_respawn()
 
 func _do_respawn():
-	print(enemy_name + " has respawned!")
+	ChatLog.add_message(enemy_name + " has respawned nearby.", "system")
 	current_health = max_health
 	state = State.IDLE
 	_player = null
@@ -224,10 +224,10 @@ func _on_body_entered_detection(body):
 	if body.is_in_group("players"):
 		_player = body
 		state = State.CHASE
-		print(enemy_name + " spotted the player!")
+		ChatLog.add_message(enemy_name + " has spotted you!", "combat")
 
 func _on_body_exited_detection(body):
 	if body.is_in_group("players"):
 		_player = null
 		state = State.PATROL
-		print(enemy_name + " lost sight of player")
+		ChatLog.add_message(enemy_name + " has lost sight of you!", "combat")

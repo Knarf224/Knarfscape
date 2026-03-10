@@ -142,7 +142,7 @@ func _try_attack():
 	hitbox.monitoring = false
 	hitbox.monitorable = false
 
-	print("Player attacks!")
+	ChatLog.add_message("You attack!")
 
 func _handle_attack_timer(delta):
 	if not _can_attack:
@@ -159,7 +159,7 @@ func _on_hitbox_body_entered(body):
 			var attack_level = GameManager.skills.get_level("attack")
 			damage += attack_level * 0.5
 		body.take_damage(damage)
-		print("Hit enemy for " + str(damage) + " damage!")
+		ChatLog.add_message("You hit " + body.enemy_name + " for " + str(int(damage)) + " damage!", "combat")
 		# Grant XP for hitting
 		if GameManager.skills:
 			GameManager.skills.add_xp("attack", 4.0)
@@ -169,7 +169,7 @@ func _on_hitbox_body_entered(body):
 func _toggle_lock_on():
 	if _locked_target != null:
 		_locked_target = null
-		print("Lock on released")
+		ChatLog.add_message("Lock on released.", "system")
 		return
 
 	# Find nearest enemy in range
@@ -185,9 +185,9 @@ func _toggle_lock_on():
 
 	if nearest:
 		_locked_target = nearest
-		print("Locked on to: " + nearest.name)
+		ChatLog.add_message("Locked on to: " + nearest.name, "system")
 	else:
-		print("No enemies in range to lock on to")
+		ChatLog.add_message("No enemies in range to lock on to.", "system")
 
 func _handle_lock_on_tracking():
 	if _locked_target == null:
@@ -243,7 +243,7 @@ func _try_interact():
 		elif closest.is_in_group("tombstones"):
 			closest.interact(self)
 	else:
-		print("Nothing nearby to interact with")
+		ChatLog.add_message("Nothing nearby to interact with.", "system")
 
 # ── DEATH & RESPAWN ────────────────────────────────
 func _check_death():
@@ -254,7 +254,7 @@ func _check_death():
 		_on_player_died()
 
 func _on_player_died():
-	print("Player has died!")
+	ChatLog.add_message("You have died! Your items are at your grave.", "death")
 	velocity = Vector3.ZERO
 	set_physics_process(false)
 	set_process_input(false)
@@ -277,10 +277,9 @@ func _spawn_tombstone():
 	for i in GameManager.inventory.slots.size():
 		GameManager.inventory.slots[i] = null
 	GameManager.inventory.emit_signal("inventory_changed")
-	print("Your items have been dropped at your grave!")
+	ChatLog.add_message("Your items have been dropped at your grave!", "death")
 
 func _respawn():
-	print("Respawning player...")
 	_is_dead = false
 
 	# Restore HP to current hitpoints level
@@ -298,4 +297,4 @@ func _respawn():
 	set_physics_process(true)
 	set_process_input(true)
 	_capture_mouse()
-	print("You respawned with " + str(hp_level) + " HP!")
+	ChatLog.add_message("You respawned with " + str(hp_level) + " HP!", "system")

@@ -46,6 +46,7 @@ func _create_starter_quests():
 
 func start_quest(quest) -> void:
 	quest.start_quest()
+	ChatLog.add_message("New Quest: " + quest.quest_name, "quest")
 	quest.quest_completed.connect(_on_quest_completed)
 	active_quests.append(quest)
 	emit_signal("quest_started", quest.quest_name)
@@ -55,6 +56,7 @@ func _on_quest_completed(quest_id: String) -> void:
 		if quest.quest_id == quest_id:
 			active_quests.erase(quest)
 			completed_quests.append(quest)
+			ChatLog.add_message("Quest Complete: " + quest.quest_name + "!", "quest")
 			emit_signal("quest_completed", quest.quest_name)
 			break
 

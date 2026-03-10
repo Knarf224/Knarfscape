@@ -102,7 +102,7 @@ func add_xp(skill_name: String, amount: float) -> void:
 	skills[skill_name]["xp"] += amount
 	emit_signal("xp_gained", skill_name, amount)
 	_check_level_up(skill_name)
-	print("+" + str(amount) + " " + skill_name + " XP  (Total: " + str(skills[skill_name]["xp"]) + ")")
+	ChatLog.add_message("+" + str(int(amount)) + " " + skill_name.capitalize() + " XP", "xp")
 
 # ── LEVEL UP CHECK ─────────────────────────────────
 func _check_level_up(skill_name: String) -> void:
@@ -117,7 +117,7 @@ func _check_level_up(skill_name: String) -> void:
 		skills[skill_name]["level"] += 1
 		var new_level = skills[skill_name]["level"]
 		emit_signal("skill_leveled_up", skill_name, new_level)
-		print("LEVEL UP! " + skill_name.to_upper() + " is now level " + str(new_level))
+		ChatLog.add_message("LEVEL UP! " + skill_name.capitalize() + " is now level " + str(new_level) + "!", "xp")
 		# Check again in case of multiple level ups at once
 		if new_level < 50:
 			_check_level_up(skill_name)

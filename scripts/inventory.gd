@@ -26,7 +26,7 @@ func add_item(item, quantity: int = 1) -> bool:
 				slots[i]["quantity"] += quantity
 				emit_signal("item_added", item.name, quantity)
 				emit_signal("inventory_changed")
-				print("Added " + str(quantity) + "x " + item.name + " (stacked)")
+				ChatLog.add_message("Added " + str(quantity) + "x " + item.name + " (stacked)", "gather")
 				return true
 
 	# Find an empty slot
@@ -35,12 +35,12 @@ func add_item(item, quantity: int = 1) -> bool:
 			slots[i] = { "item": item, "quantity": quantity }
 			emit_signal("item_added", item.name, quantity)
 			emit_signal("inventory_changed")
-			print("Added " + str(quantity) + "x " + item.name + " to slot " + str(i))
+			ChatLog.add_message("Added " + str(quantity) + "x " + item.name + " to inventory", "gather")
 			return true
 
 	# No space found
 	emit_signal("inventory_full")
-	print("Inventory full! Could not add " + item.name)
+	ChatLog.add_message("Inventory full! Could not add " + item.name, "system")
 	return false
 
 # ── REMOVE ITEM ────────────────────────────────────

@@ -48,26 +48,26 @@ func _physics_process(delta):
 # ── INTERACTION ────────────────────────────────────
 func try_interact(player) -> bool:
 	if state != State.AVAILABLE:
-		print(resource_name + " is depleted. Respawning soon...")
+		ChatLog.add_message(resource_name + " is depleted. Respawning soon...", "system")
 		return false
 
 	# Check player skill level
 	var player_level = GameManager.skills.get_level(skill_required)
 	if player_level < level_required:
-		print("You need level " + str(level_required) + " " + skill_required + " to gather this.")
+		ChatLog.add_message("You need level " + str(level_required) + " " + skill_required + " to gather this.", "system")
 		return false
 
 	# Check distance
 	var dist = player.global_position.distance_to(global_position)
 	if dist > interaction_distance:
-		print("Too far away!")
+		ChatLog.add_message("You are too far away!", "system")
 		return false
 
 	# Start harvesting
 	_player_ref = player
 	state = State.HARVESTING
 	_harvest_timer = harvest_time
-	print("Gathering " + resource_name + "...")
+	ChatLog.add_message("You begin gathering " + resource_name + "...", "gather")
 	return true
 
 func _complete_harvest():
@@ -79,9 +79,9 @@ func _complete_harvest():
 		# Award XP
 		GameManager.skills.add_xp(skill_required, xp_reward)
 		emit_signal("resource_harvested", item_id, harvest_amount, xp_reward)
-		print("Gathered " + str(harvest_amount) + "x " + item_name + "!")
+		ChatLog.add_message("You gathered " + str(harvest_amount) + "x " + item_name + "!", "gather")
 	else:
-		print("Inventory full!")
+		ChatLog.add_message("Your inventory is full!", "system")
 		
 	# Update quest objectives based on what was gathered
 	if item_id == "logs":
@@ -110,7 +110,7 @@ func _respawn():
 	if mesh:
 		mesh.material_override = null
 
-	print(resource_name + " has respawned!")
+	ChatLog.add_message(resource_name + " has respawned!", "system")
 
 func _create_item():
 	var item = Item.new()

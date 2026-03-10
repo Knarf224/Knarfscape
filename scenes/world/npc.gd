@@ -17,9 +17,9 @@ func _ready():
 func interact(player) -> void:
 	var dist = player.global_position.distance_to(global_position)
 	if dist > INTERACT_DISTANCE:
-		print("Too far away to talk!")
+		ChatLog.add_message("You are too far away to talk!", "system")
 		return
 
 	# Show current dialogue line
-	print(npc_name + ": " + dialogue[_current_line])
+	ChatLog.add_message(npc_name + ": " + dialogue[_current_line], "npc")
 	_current_line = (_current_line + 1) % dialogue.size()
