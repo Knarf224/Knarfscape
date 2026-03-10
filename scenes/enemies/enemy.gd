@@ -144,14 +144,16 @@ func _do_attack(delta):
 	if _can_attack:
 		_can_attack = false
 		_attack_timer = attack_cooldown
-		# Deal damage to player
 		if GameManager.stats:
-			var defence_reduction = GameManager.skills.get_level("defence") * 0.2
+			var defence_reduction = (GameManager.skills.get_level("defence") * 0.2) + GameManager.equipment.get_defence_bonus()
 			var final_damage = max(1.0, attack_damage - defence_reduction)
 			GameManager.stats.take_damage(final_damage)
 			ChatLog.add_message(enemy_name + " hits you for " + str(int(final_damage)) + " damage!", "combat")
-			# Grant defence XP for being hit
-			GameManager.skills.add_xp("defence", 3.0)
+			# Shield gives defence XP when hit
+			if GameManager.equipment.has_shield():
+				GameManager.skills.add_xp("defence", 3.0)
+			else:
+				GameManager.skills.add_xp("defence", 1.0)
 
 func _handle_attack_timer(delta):
 	if not _can_attack:

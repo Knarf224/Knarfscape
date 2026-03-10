@@ -8,8 +8,8 @@ script = ExtResource("1_eusjq")
 [node name="Background" type="Panel" parent="."]
 offset_left = 20.0
 offset_top = 120.0
-offset_right = 200.0
-offset_bottom = 520.0
+offset_right = 198.0
+offset_bottom = 468.0
 
 [node name="Title" type="Label" parent="Background"]
 layout_mode = 0

@@ -16,6 +16,7 @@ const ATTACK_COOLDOWN = 0.6
 var _can_attack := true
 var _is_attacking := false
 var _attack_timer := 0.0
+var _ui_mode: bool = false
 
 # ── DEATH & RESPAWN ────────────────────────────────
 var _is_dead := false
@@ -25,6 +26,8 @@ var _spawn_point := Vector3(0, 2, 0)
 @onready var spring_arm = $SpringArm3D
 @onready var camera = $SpringArm3D/Camera3D
 @onready var hitbox = $HitBox
+@onready var weapon_mesh = $WeaponHolder/WeaponMesh
+@onready var shield_mesh = $WeaponHolder/ShieldMesh
 
 # ── LOCK ON ────────────────────────────────────────
 var _locked_target = null
@@ -37,15 +40,17 @@ var _camera_pitch := 0.0
 # ──────────────────────────────────────────────────
 func _ready():
 	_capture_mouse()
-	# Disable hitbox until we attack
 	hitbox.monitoring = false
 	hitbox.monitorable = false
-	# Connect hitbox signal
 	hitbox.body_entered.connect(_on_hitbox_body_entered)
+	add_to_group("players")
+	# Connect equipment changes to update visuals
+	GameManager.equipment.equipment_changed.connect(_update_weapon_visuals)
+	_update_weapon_visuals()
 
 # ── INPUT ──────────────────────────────────────────
 func _input(event):
-	if event is InputEventMouseMotion and _mouse_captured:
+	if event is InputEventMouseMotion and not _ui_mode:
 		if _locked_target == null:
 			rotate_y(-event.relative.x * MOUSE_SENSITIVITY)
 		_camera_pitch -= event.relative.y * MOUSE_SENSITIVITY
@@ -60,7 +65,7 @@ func _input(event):
 		_release_mouse()
 
 	# Attack input
-	if event.is_action_pressed("attack"):
+	if event.is_action_pressed("attack") and not _ui_mode:
 		_try_attack()
 
 	# Lock on input
@@ -85,6 +90,20 @@ func _input(event):
 		var inv = get_tree().get_first_node_in_group("inventory_ui")
 		if inv:
 			inv.toggle_visible()
+	
+	if event.is_action_pressed("toggle_equipment"):
+		var eq = get_tree().get_first_node_in_group("equipment_ui")
+		if eq:
+			eq.toggle_visible()
+	
+	if event.is_action_pressed("toggle_ui_mouse"):
+		_ui_mode = not _ui_mode
+		if _ui_mode:
+			Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+			ChatLog.add_message("UI mode on - click items to equip.", "system")
+		else:
+			Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
+			ChatLog.add_message("UI mode off.", "system")
 
 # ── PHYSICS LOOP ───────────────────────────────────
 func _physics_process(delta):
@@ -126,6 +145,11 @@ func _handle_gravity(delta):
 
 # ── COMBAT ─────────────────────────────────────────
 func _try_attack():
+	var range = GameManager.equipment.get_attack_range()
+	var shape = hitbox.get_node("HitBoxShape")
+	if shape and shape.shape:
+		shape.shape.size = Vector3(1.0, 1.0, range)
+	hitbox.position.z = -(range / 2.0)
 	if not _can_attack:
 		return
 
@@ -133,37 +157,33 @@ func _try_attack():
 	_is_attacking = true
 	_attack_timer = ATTACK_COOLDOWN
 
-	# Enable hitbox for a brief window
 	hitbox.monitoring = true
 	hitbox.monitorable = true
 
-	# Disable hitbox after a short window
 	await get_tree().create_timer(0.2).timeout
 	hitbox.monitoring = false
 	hitbox.monitorable = false
 
-	ChatLog.add_message("You attack!")
-
-func _handle_attack_timer(delta):
-	if not _can_attack:
-		_attack_timer -= delta
-		if _attack_timer <= 0:
-			_can_attack = true
-			_is_attacking = false
+	ChatLog.add_message("You attack!", "combat")
 
 func _on_hitbox_body_entered(body):
 	if body.is_in_group("enemies"):
-		var damage = ATTACK_DAMAGE
-		# Add attack level bonus damage
-		if GameManager.skills:
-			var attack_level = GameManager.skills.get_level("attack")
-			damage += attack_level * 0.5
+		# Get damage from equipment manager
+		var damage = randf_range(
+			GameManager.equipment.get_damage_min(),
+			GameManager.equipment.get_damage_max()
+		)
+		damage = round(damage)
 		body.take_damage(damage)
 		ChatLog.add_message("You hit " + body.enemy_name + " for " + str(int(damage)) + " damage!", "combat")
-		# Grant XP for hitting
-		if GameManager.skills:
-			GameManager.skills.add_xp("attack", 4.0)
-			GameManager.skills.add_xp("strength", 4.0)
+
+		# Award XP to the correct skill based on weapon
+		var xp_skill = GameManager.equipment.get_attack_xp_skill()
+		GameManager.skills.add_xp(xp_skill, 4.0)
+
+		# Shield gives defence XP when equipped
+		if GameManager.equipment.has_shield():
+			GameManager.skills.add_xp("defence", 2.0)
 
 # ── LOCK ON ────────────────────────────────────────
 func _toggle_lock_on():
@@ -254,6 +274,8 @@ func _check_death():
 		_on_player_died()
 
 func _on_player_died():
+	_ui_mode = false
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
 	ChatLog.add_message("You have died! Your items are at your grave.", "death")
 	velocity = Vector3.ZERO
 	set_physics_process(false)
@@ -280,6 +302,8 @@ func _spawn_tombstone():
 	ChatLog.add_message("Your items have been dropped at your grave!", "death")
 
 func _respawn():
+	_ui_mode = false
+	Input.set_mouse_mode(Input.MOUSE_MODE_CAPTURED)
 	_is_dead = false
 
 	# Restore HP to current hitpoints level
@@ -298,3 +322,18 @@ func _respawn():
 	set_process_input(true)
 	_capture_mouse()
 	ChatLog.add_message("You respawned with " + str(hp_level) + " HP!", "system")
+
+func _update_weapon_visuals():
+	var has_weapon = GameManager.equipment.main_hand != null
+	var has_shield = GameManager.equipment.off_hand != null
+	if weapon_mesh:
+		weapon_mesh.visible = has_weapon
+	if shield_mesh:
+		shield_mesh.visible = has_shield
+
+func _handle_attack_timer(delta: float):
+	if not _can_attack:
+		_attack_timer -= delta
+		if _attack_timer <= 0:
+			_can_attack = true
+			_is_attacking = false

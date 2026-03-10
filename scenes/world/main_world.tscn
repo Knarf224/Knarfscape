@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3 uid="uid://bj4q7khofggqo"]
+[gd_scene load_steps=13 format=3 uid="uid://bj4q7khofggqo"]
 
 [ext_resource type="PackedScene" uid="uid://3v2c5hj2fmld" path="res://scenes/player/player.tscn" id="1_hqnic"]
 [ext_resource type="PackedScene" uid="uid://di524ib58xvk1" path="res://scenes/enemies/Enemy.tscn" id="2_6qk6s"]
@@ -10,6 +10,7 @@
 [ext_resource type="PackedScene" uid="uid://bw51a1ethq244" path="res://scenes/ui/skills_panel.tscn" id="8_cjh4h"]
 [ext_resource type="PackedScene" uid="uid://cf5jdxj8j5ysm" path="res://scenes/ui/inventory_ui.tscn" id="9_na32j"]
 [ext_resource type="PackedScene" uid="uid://dfjvi7lyalwav" path="res://scenes/ui/death_screen.tscn" id="10_35w0s"]
+[ext_resource type="PackedScene" uid="uid://ck7tyaoqwhrha" path="res://scenes/ui/equipment_ui.tscn" id="11_tbob4"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_gyhjv"]
 
@@ -70,3 +71,5 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -0.5, 12)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 
 [node name="DeathScreen" parent="." groups=["death_screen"] instance=ExtResource("10_35w0s")]
+
+[node name="EquipmentUI" parent="." groups=["EquipmentUI"] instance=ExtResource("11_tbob4")]

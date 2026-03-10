@@ -1,4 +1,4 @@
-[gd_scene load_steps=5 format=3 uid="uid://3v2c5hj2fmld"]
+[gd_scene load_steps=9 format=3 uid="uid://3v2c5hj2fmld"]
 
 [ext_resource type="Script" path="res://scenes/player/player.gd" id="1_gotlb"]
 
@@ -7,6 +7,20 @@
 [sub_resource type="CapsuleMesh" id="CapsuleMesh_qj7q1"]
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_ycmp0"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ybu10"]
+albedo_color = Color(0.925202, 0.74025, 0.982511, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_ljeqt"]
+material = SubResource("StandardMaterial3D_ybu10")
+size = Vector3(0.15, 0.8, 0.15)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_o2s6x"]
+albedo_color = Color(0.524039, 0.518993, 0, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_gkamv"]
+material = SubResource("StandardMaterial3D_o2s6x")
+size = Vector3(0.6, 0.8, 0.1)
 
 [node name="Player" type="CharacterBody3D" groups=["players"]]
 script = ExtResource("1_gotlb")
@@ -29,3 +43,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
 [node name="HitBoxShape" type="CollisionShape3D" parent="HitBox"]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.5, -1)
 shape = SubResource("BoxShape3D_ycmp0")
+
+[node name="WeaponHolder" type="Node3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.5, 0.5, -0.5)
+
+[node name="WeaponMesh" type="MeshInstance3D" parent="WeaponHolder"]
+mesh = SubResource("BoxMesh_ljeqt")
+
+[node name="ShieldMesh" type="MeshInstance3D" parent="WeaponHolder"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.8, -0.3, -0.3)
+mesh = SubResource("BoxMesh_gkamv")

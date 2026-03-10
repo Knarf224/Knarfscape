@@ -4,15 +4,15 @@ extends CanvasLayer
 
 func _ready():
 	GameManager.inventory.inventory_changed.connect(_refresh)
+	GameManager.equipment.equipment_changed.connect(_refresh)
 	_refresh()
 
 func _refresh():
-	# Clear grid
 	for child in grid.get_children():
 		child.queue_free()
 
-	# Rebuild from inventory data
-	for slot in GameManager.inventory.slots:
+	for i in GameManager.inventory.slots.size():
+		var slot = GameManager.inventory.slots[i]
 		var panel = Panel.new()
 		panel.custom_minimum_size = Vector2(38, 38)
 
@@ -22,11 +22,27 @@ func _refresh():
 
 		if slot != null:
 			label.text = slot["item"].name.left(6) + "\nx" + str(slot["quantity"])
+			# Make it clickable
+			var button = Button.new()
+			button.flat = true
+			button.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
+			button.pressed.connect(_on_item_clicked.bind(i))
+			panel.add_child(button)
 		else:
 			label.text = ""
 
 		panel.add_child(label)
 		grid.add_child(panel)
+
+func _on_item_clicked(slot_index: int):
+	var slot = GameManager.inventory.slots[slot_index]
+	if slot == null:
+		return
+	var item = slot["item"]
+	if item.is_equippable():
+		GameManager.equipment.equip_item(item)
+	else:
+		ChatLog.add_message(item.name + " is not equippable.", "system")
 
 func toggle_visible():
 	visible = not visible
