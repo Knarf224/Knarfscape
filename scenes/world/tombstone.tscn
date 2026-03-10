@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://c7xaktglgb7xu"]
+
+[ext_resource type="Script" path="res://scenes/world/tombstone.gd" id="1_iha4t"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_3ir54"]
+size = Vector3(0.5, 1, 0.2)
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_1rbij"]
+albedo_color = Color(0.8, 0.8, 0.8, 1)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_h8vyh"]
+size = Vector3(0.5, 1, 0.2)
+
+[node name="Tombstone" type="StaticBody3D"]
+script = ExtResource("1_iha4t")
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
+mesh = SubResource("BoxMesh_3ir54")
+surface_material_override/0 = SubResource("StandardMaterial3D_1rbij")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="."]
+shape = SubResource("BoxShape3D_h8vyh")
+
+[node name="Label3D" type="Label3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.8, 0)
+text = "GRAVE"
+font_size = 64

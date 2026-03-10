@@ -17,6 +17,10 @@ var _can_attack := true
 var _is_attacking := false
 var _attack_timer := 0.0
 
+# ── DEATH & RESPAWN ────────────────────────────────
+var _is_dead := false
+var _spawn_point := Vector3(0, 2, 0)
+
 # ── NODE REFERENCES ────────────────────────────────
 @onready var spring_arm = $SpringArm3D
 @onready var camera = $SpringArm3D/Camera3D
@@ -89,6 +93,7 @@ func _physics_process(delta):
 	_handle_jump()
 	_handle_attack_timer(delta)
 	_handle_lock_on_tracking()
+	_check_death()
 	move_and_slide()
 
 # ── MOVEMENT ───────────────────────────────────────
@@ -212,25 +217,78 @@ func _try_interact():
 	var closest = null
 	var closest_dist = 4.0
 
-	# Check resource nodes
 	for node in get_tree().get_nodes_in_group("resource_nodes"):
 		var dist = global_position.distance_to(node.global_position)
 		if dist < closest_dist:
 			closest_dist = dist
 			closest = node
 
-	# Check NPCs
 	for npc in get_tree().get_nodes_in_group("npcs"):
 		var dist = global_position.distance_to(npc.global_position)
 		if dist < closest_dist:
 			closest_dist = dist
 			closest = npc
 
-	# Interact with whatever is closest
+	for tombstone in get_tree().get_nodes_in_group("tombstones"):
+		var dist = global_position.distance_to(tombstone.global_position)
+		if dist < closest_dist:
+			closest_dist = dist
+			closest = tombstone
+
 	if closest != null:
 		if closest.is_in_group("resource_nodes"):
 			closest.try_interact(self)
 		elif closest.is_in_group("npcs"):
 			closest.interact(self)
+		elif closest.is_in_group("tombstones"):
+			closest.interact(self)
 	else:
 		print("Nothing nearby to interact with")
+
+# ── DEATH & RESPAWN ────────────────────────────────
+func _check_death():
+	if _is_dead:
+		return
+	if GameManager.stats.is_dead():
+		_is_dead = true
+		_on_player_died()
+
+func _on_player_died():
+	print("Player has died!")
+	velocity = Vector3.ZERO
+	set_physics_process(false)
+	set_process_input(false)
+	Input.set_mouse_mode(Input.MOUSE_MODE_VISIBLE)
+	_spawn_tombstone()
+	var death_screen = get_tree().get_first_node_in_group("death_screen")
+	if death_screen:
+		death_screen.respawn_requested.connect(_respawn, CONNECT_ONE_SHOT)
+		death_screen.show_death_screen()
+	else:
+		await get_tree().create_timer(5.0).timeout
+		_respawn()
+
+func _spawn_tombstone():
+	var tombstone_scene = preload("res://scenes/world/tombstone.tscn")
+	var tombstone = tombstone_scene.instantiate()
+	get_tree().current_scene.add_child(tombstone)
+	tombstone.global_position = global_position
+	tombstone.store_items(GameManager.inventory.slots.duplicate(true))
+	for i in GameManager.inventory.slots.size():
+		GameManager.inventory.slots[i] = null
+	GameManager.inventory.emit_signal("inventory_changed")
+	print("Your items have been dropped at your grave!")
+
+func _respawn():
+	print("Respawning player...")
+	_is_dead = false
+	GameManager.stats.health_current = 1.0
+	var spawn = get_tree().get_first_node_in_group("spawn_points")
+	if spawn:
+		global_position = spawn.global_position
+	else:
+		global_position = _spawn_point
+	set_physics_process(true)
+	set_process_input(true)
+	_capture_mouse()
+	print("You respawned! Find your grave to recover your items.")

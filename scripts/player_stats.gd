@@ -2,19 +2,18 @@ extends Resource
 class_name PlayerStats
 
 # ── CORE STATS ─────────────────────────────────────
-@export var health_current: float = 10.0
-@export var health_max: float = 10.0
-@export var stamina_current: float = 10.0
-@export var stamina_max: float = 10.0
+var health_current: float = 10.0
+var health_max: float = 10.0
+var stamina_current: float = 10.0
+var stamina_max: float = 10.0
 
 # ── COMBAT STATS ───────────────────────────────────
-@export var attack_level: int = 1
-@export var defence_level: int = 1
-@export var strength_level: int = 1
+var attack_level: int = 1
+var defence_level: int = 1
+var strength_level: int = 1
 
 # ── META ───────────────────────────────────────────
-@export var player_name: String = "Player"
-@export var total_level: int = 0
+var player_name: String = "Player"
 
 # ── METHODS ────────────────────────────────────────
 func take_damage(amount: float) -> void:
@@ -31,3 +30,15 @@ func restore_stamina(amount: float) -> void:
 
 func is_dead() -> bool:
 	return health_current <= 0
+
+func update_max_health_from_hitpoints(hitpoints_level: int) -> void:
+	# Max HP = hitpoints level directly (level 10 = 10 HP, level 50 = 50 HP)
+	var new_max = float(hitpoints_level)
+	if new_max > health_max:
+		# Heal the difference when max HP increases
+		var diff = new_max - health_max
+		health_max = new_max
+		health_current = min(health_current + diff, health_max)
+	else:
+		health_max = new_max
+		health_current = min(health_current, health_max)
