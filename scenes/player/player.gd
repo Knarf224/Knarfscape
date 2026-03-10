@@ -282,13 +282,20 @@ func _spawn_tombstone():
 func _respawn():
 	print("Respawning player...")
 	_is_dead = false
-	GameManager.stats.health_current = 1.0
+
+	# Restore HP to current hitpoints level
+	var hp_level = GameManager.skills.get_level("hitpoints")
+	GameManager.stats.health_current = float(hp_level)
+	GameManager.stats.health_max = float(hp_level)
+
+	# Move to spawn point
 	var spawn = get_tree().get_first_node_in_group("spawn_points")
 	if spawn:
 		global_position = spawn.global_position
 	else:
 		global_position = _spawn_point
+
 	set_physics_process(true)
 	set_process_input(true)
 	_capture_mouse()
-	print("You respawned! Find your grave to recover your items.")
+	print("You respawned with " + str(hp_level) + " HP!")

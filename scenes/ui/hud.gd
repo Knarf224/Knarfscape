@@ -14,11 +14,14 @@ func _process(_delta):
 	_update_stamina_bar()
 	_check_interaction_prompt()
 
+
 func _update_health_bar():
 	if GameManager.stats:
 		health_bar.max_value = GameManager.stats.health_max
 		health_bar.value = GameManager.stats.health_current
-		health_label.text = "HP: " + str(int(GameManager.stats.health_current)) + "/" + str(int(GameManager.stats.health_max))
+		var current = str(int(GameManager.stats.health_current))
+		var maximum = str(int(GameManager.stats.health_max))
+		health_label.text = "HP: " + current + "/" + maximum
 
 func _update_stamina_bar():
 	if GameManager.stats:

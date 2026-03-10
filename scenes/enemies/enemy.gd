@@ -12,6 +12,8 @@ extends CharacterBody3D
 var current_health: float = 30.0
 var _can_attack := true
 var _attack_timer := 0.0
+var _spawn_position: Vector3
+const RESPAWN_DELAY: float = 5.0
 
 # ── AI STATE ───────────────────────────────────────
 enum State { IDLE, PATROL, CHASE, ATTACK, DEAD }
@@ -25,12 +27,15 @@ const GRAVITY = 9.8
 # ── NODE REFERENCES ────────────────────────────────
 @onready var nav_agent = $NavigationAgent3D
 @onready var detection_zone = $DetectionZone
+@onready var health_label = $HealthLabel
 
 var _player = null
 
 # ──────────────────────────────────────────────────
 func _ready():
 	current_health = max_health
+	_spawn_position = global_position
+	_update_health_label()
 	add_to_group("enemies")
 	detection_zone.body_entered.connect(_on_body_entered_detection)
 	detection_zone.body_exited.connect(_on_body_exited_detection)
@@ -113,6 +118,11 @@ func _do_chase(delta):
 	look_target.y = global_position.y
 	look_at(look_target, Vector3.UP)
 
+# ── Update Health ────────────────────────────────────
+func _update_health_label():
+	if health_label:
+		health_label.text = str(int(current_health)) + "/" + str(int(max_health))
+
 # ── ATTACK ─────────────────────────────────────────
 func _do_attack(delta):
 	if _player == null:
@@ -153,36 +163,61 @@ func _handle_attack_timer(delta):
 func take_damage(amount: float):
 	if state == State.DEAD:
 		return
-
 	current_health -= amount
+	_update_health_label()
 	print(enemy_name + " takes " + str(amount) + " damage! HP: " + str(current_health) + "/" + str(max_health))
-
-	# Always chase when hit
 	if _player == null:
 		_player = get_tree().get_first_node_in_group("players")
 	state = State.CHASE
-
 	if current_health <= 0:
 		_die()
 
-# ── DEATH ──────────────────────────────────────────
+# ── DEATH/RESPAWN ──────────────────────────────────────────
 func _die():
 	state = State.DEAD
 	velocity = Vector3.ZERO
 	print(enemy_name + " has been defeated!")
 
-	# Grant XP rewards
 	if GameManager.skills:
 		GameManager.skills.add_xp("hitpoints", xp_reward * 0.33)
 		GameManager.skills.add_xp("attack", xp_reward * 0.33)
 		GameManager.skills.add_xp("strength", xp_reward * 0.33)
-		
-	# Update quest objectives
+
 	QuestManager.update_quest_objective("first_blood", 0)
 
-	# Remove from scene after short delay
-	await get_tree().create_timer(0.5).timeout
-	queue_free()
+	# Hide enemy instead of deleting it
+	visible = false
+	health_label.visible = false
+
+	# Disable collision and detection
+	$CollisionShape3D.disabled = true
+	detection_zone.monitoring = false
+	detection_zone.monitorable = false
+
+	# Wait then respawn
+	await get_tree().create_timer(RESPAWN_DELAY).timeout
+	_do_respawn()
+
+func _do_respawn():
+	print(enemy_name + " has respawned!")
+	current_health = max_health
+	state = State.IDLE
+	_player = null
+
+	# Return to original spawn position
+	global_position = _spawn_position
+
+	# Show enemy again
+	visible = true
+	health_label.visible = true
+	_update_health_label()
+
+	# Re-enable collision and detection
+	$CollisionShape3D.disabled = false
+	detection_zone.monitoring = true
+	detection_zone.monitorable = true
+
+	_set_new_patrol_target()
 
 # ── DETECTION ──────────────────────────────────────
 func _on_body_entered_detection(body):
