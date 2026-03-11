@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3 uid="uid://bj4q7khofggqo"]
+[gd_scene load_steps=23 format=3 uid="uid://bj4q7khofggqo"]
 
 [ext_resource type="Texture2D" uid="uid://l4v8b6lg6qer" path="res://textures/ground/Grass004_4K-JPG_Roughness.jpg" id="1_73k5j"]
 [ext_resource type="PackedScene" uid="uid://3v2c5hj2fmld" path="res://scenes/player/player.tscn" id="1_hqnic"]
@@ -12,9 +12,10 @@
 [ext_resource type="PackedScene" uid="uid://cf5jdxj8j5ysm" path="res://scenes/ui/inventory_ui.tscn" id="9_na32j"]
 [ext_resource type="PackedScene" uid="uid://dfjvi7lyalwav" path="res://scenes/ui/death_screen.tscn" id="10_35w0s"]
 [ext_resource type="PackedScene" uid="uid://ck7tyaoqwhrha" path="res://scenes/ui/equipment_ui.tscn" id="11_tbob4"]
-[ext_resource type="PackedScene" path="res://scenes/world/Chest.tscn" id="13_chest"]
-[ext_resource type="PackedScene" path="res://scenes/world/Fire.tscn" id="14_fire"]
-[ext_resource type="PackedScene" path="res://scenes/ui/chest_ui.tscn" id="15_chestui"]
+[ext_resource type="PackedScene" uid="uid://cx1a2b3c4d5e6" path="res://scenes/world/Chest.tscn" id="13_chest"]
+[ext_resource type="PackedScene" uid="uid://cx3k4l5m6n7o8" path="res://scenes/world/Fire.tscn" id="14_fire"]
+[ext_resource type="PackedScene" uid="uid://cx7f8hah0i1j2" path="res://scenes/ui/chest_ui.tscn" id="15_chestui"]
+[ext_resource type="PackedScene" uid="uid://bhgfvgayynvfy" path="res://scenes/world/House.tscn" id="16_4rqbb"]
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_gyhjv"]
 
@@ -67,7 +68,7 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.485535, 25)
 slide_on_ceiling = false
 
 [node name="NPC" parent="." instance=ExtResource("3_a23fx")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.196527, 0.5, -12.0432)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.196527, 0.390426, -12.0432)
 
 [node name="Rock" parent="." instance=ExtResource("4_a2506")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.712, -0.38, -0.545)
@@ -79,13 +80,13 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.394, -0.38, 2.624)
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.6055, -0.379793, -2.65114)
 
 [node name="Tree" parent="." instance=ExtResource("5_bsq45")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -20.3021)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.31537, -20.3021)
 
 [node name="Tree2" parent="." instance=ExtResource("5_bsq45")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.4636, 0, -16.1269)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.4636, -0.459092, -16.1269)
 
 [node name="Tree3" parent="." instance=ExtResource("5_bsq45")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.80557, 0, -15.7164)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.80557, -0.404402, -15.7164)
 
 [node name="FishingSpot" parent="." instance=ExtResource("6_ncj5h")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.4129, -0.5, 2.3279)
@@ -107,12 +108,15 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 [node name="EquipmentUI" parent="." groups=["EquipmentUI"] instance=ExtResource("11_tbob4")]
 
 [node name="Chest" parent="." instance=ExtResource("13_chest")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4, 0, -18)
+transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 4, -0.481684, -26.664)
 
 [node name="Fire" parent="." instance=ExtResource("14_fire")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, 0, -24)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2, -0.330308, -24)
 
 [node name="ChestUI" parent="." groups=["chest_ui"] instance=ExtResource("15_chestui")]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_dhx6v")
+
+[node name="House" parent="." instance=ExtResource("16_4rqbb")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.296387, -0.52326, -3.82728)
