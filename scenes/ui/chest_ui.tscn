@@ -1,0 +1,41 @@
+[gd_scene load_steps=2 format=3 uid="uid://cx7f8g9h0i1j2"]
+
+[ext_resource type="Script" path="res://scenes/ui/chest_ui.gd" id="1_chestui"]
+
+[node name="ChestUI" type="CanvasLayer"]
+script = ExtResource("1_chestui")
+
+[node name="Background" type="Panel" parent="."]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -150.0
+offset_top = -200.0
+offset_right = 150.0
+offset_bottom = 200.0
+
+[node name="VBox" type="VBoxContainer" parent="Background"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 10.0
+offset_top = 10.0
+offset_right = -10.0
+offset_bottom = -10.0
+
+[node name="Title" type="Label" parent="Background/VBox"]
+text = "Chest"
+horizontal_alignment = 1
+
+[node name="ItemList" type="VBoxContainer" parent="Background/VBox"]
+size_flags_vertical = 3
+
+[node name="Buttons" type="HBoxContainer" parent="Background/VBox"]
+
+[node name="TakeAll" type="Button" parent="Background/VBox/Buttons"]
+size_flags_horizontal = 3
+text = "Take All"
+
+[node name="Close" type="Button" parent="Background/VBox/Buttons"]
+size_flags_horizontal = 3
+text = "Close"

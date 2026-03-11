@@ -41,8 +41,13 @@ func _on_item_clicked(slot_index: int):
 	var item = slot["item"]
 	if item.is_equippable():
 		GameManager.equipment.equip_item(item)
+	elif item.type == Item.ItemType.CONSUMABLE and item.heal_amount > 0:
+		var healed = min(item.heal_amount, GameManager.stats.health_max - GameManager.stats.health_current)
+		GameManager.stats.heal(float(item.heal_amount))
+		GameManager.inventory.remove_item(item.id, 1)
+		ChatLog.add_message("You eat " + item.name + " and restore " + str(int(healed)) + " HP.", "system")
 	else:
-		ChatLog.add_message(item.name + " is not equippable.", "system")
+		ChatLog.add_message(item.name + " cannot be used right now.", "system")
 
 func toggle_visible():
 	visible = not visible

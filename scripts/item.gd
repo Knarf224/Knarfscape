@@ -46,6 +46,9 @@ enum EquipSlot {
 @export var equip_slot: EquipSlot = EquipSlot.NONE
 @export var attack_style: AttackStyle = AttackStyle.NONE
 
+# ── CONSUMABLE ─────────────────────────────────────
+@export var heal_amount: int = 0
+
 # ── SKILL REQUIREMENTS ─────────────────────────────
 @export var required_skill: String = ""
 @export var required_level: int = 0

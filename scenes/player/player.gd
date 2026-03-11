@@ -255,6 +255,18 @@ func _try_interact():
 			closest_dist = dist
 			closest = tombstone
 
+	for chest in get_tree().get_nodes_in_group("chests"):
+		var dist = global_position.distance_to(chest.global_position)
+		if dist < closest_dist:
+			closest_dist = dist
+			closest = chest
+
+	for fire in get_tree().get_nodes_in_group("fires"):
+		var dist = global_position.distance_to(fire.global_position)
+		if dist < closest_dist:
+			closest_dist = dist
+			closest = fire
+
 	if closest != null:
 		if closest.is_in_group("resource_nodes"):
 			closest.try_interact(self)
@@ -262,6 +274,10 @@ func _try_interact():
 			closest.interact(self)
 		elif closest.is_in_group("tombstones"):
 			closest.interact(self)
+		elif closest.is_in_group("chests"):
+			closest.try_interact(self)
+		elif closest.is_in_group("fires"):
+			closest.try_interact(self)
 	else:
 		ChatLog.add_message("Nothing nearby to interact with.", "system")
 
