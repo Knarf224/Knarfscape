@@ -1,5 +1,6 @@
-[gd_scene load_steps=13 format=3 uid="uid://bj4q7khofggqo"]
+[gd_scene load_steps=19 format=3 uid="uid://bj4q7khofggqo"]
 
+[ext_resource type="Texture2D" uid="uid://l4v8b6lg6qer" path="res://textures/ground/Grass004_4K-JPG_Roughness.jpg" id="1_73k5j"]
 [ext_resource type="PackedScene" uid="uid://3v2c5hj2fmld" path="res://scenes/player/player.tscn" id="1_hqnic"]
 [ext_resource type="PackedScene" uid="uid://di524ib58xvk1" path="res://scenes/enemies/Enemy.tscn" id="2_6qk6s"]
 [ext_resource type="PackedScene" uid="uid://dd5trnwndppfa" path="res://scenes/world/npc.tscn" id="3_a23fx"]
@@ -14,52 +15,80 @@
 
 [sub_resource type="NavigationMesh" id="NavigationMesh_gyhjv"]
 
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_hpjxe"]
+albedo_texture = ExtResource("1_73k5j")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_66kln"]
+uv1_scale = Vector3(10, 10, 10)
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_e1yh0"]
+
+[sub_resource type="Sky" id="Sky_r55k7"]
+sky_material = SubResource("ProceduralSkyMaterial_e1yh0")
+
+[sub_resource type="Environment" id="Environment_dhx6v"]
+background_mode = 2
+sky = SubResource("Sky_r55k7")
+ambient_light_source = 3
+ambient_light_energy = 0.5
+tonemap_mode = 2
+ssao_enabled = true
+glow_enabled = true
+glow_intensity = 0.3
+fog_enabled = true
+fog_light_color = Color(0.335745, 0.601832, 0.611836, 1)
+fog_density = 0.003
+
 [node name="World" type="Node3D"]
 
 [node name="NavigationRegion3D" type="NavigationRegion3D" parent="."]
 navigation_mesh = SubResource("NavigationMesh_gyhjv")
 
 [node name="CSGBox3D" type="CSGBox3D" parent="NavigationRegion3D"]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -1, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.278236, -1.06257, 0.89269)
+material_override = SubResource("StandardMaterial3D_hpjxe")
 use_collision = true
-size = Vector3(100, 1, 100)
+size = Vector3(100, 1, 97.0215)
+material = SubResource("StandardMaterial3D_66kln")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.707107, 0.707107, 0, -0.707107, 0.707107, 2.52724e-05, 0, 0)
+transform = Transform3D(1, 0, 0, 0, 0.842452, 0.538771, 0, -0.538771, 0.842452, 2.52724e-05, 0.116364, -0.0755807)
 shadow_enabled = true
+shadow_bias = 0.05
 
 [node name="Player" parent="." instance=ExtResource("1_hqnic")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -0.0928478, 0.364893, 0)
 
 [node name="Enemy" parent="." instance=ExtResource("2_6qk6s")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 2, 25)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 5, 0.485535, 25)
 slide_on_ceiling = false
 
 [node name="NPC" parent="." instance=ExtResource("3_a23fx")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 0.5, 3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.196527, 0.5, -12.0432)
 
 [node name="Rock" parent="." instance=ExtResource("4_a2506")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -0.2, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -16.712, -0.38, -0.545)
 
 [node name="Rock2" parent="." instance=ExtResource("4_a2506")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -0.2, 3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -14.394, -0.38, 2.624)
 
 [node name="Rock3" parent="." instance=ExtResource("4_a2506")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -8, -0.2, -3)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -10.6055, -0.379793, -2.65114)
 
 [node name="Tree" parent="." instance=ExtResource("5_bsq45")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, -20.3021)
 
 [node name="Tree2" parent="." instance=ExtResource("5_bsq45")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3, 1, -10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.4636, 1, -16.1269)
 
 [node name="Tree3" parent="." instance=ExtResource("5_bsq45")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1, -10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.80557, 1, -15.7164)
 
 [node name="FishingSpot" parent="." instance=ExtResource("6_ncj5h")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 10, -0.5, 10)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 15.4129, -0.5, 2.3279)
 
 [node name="FishingSpot2" parent="." instance=ExtResource("6_ncj5h")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 12, -0.5, 12)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 18.1637, -0.5, 0.6775)
 
 [node name="HUD" parent="." instance=ExtResource("7_whx8n")]
 
@@ -73,3 +102,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 2, 0)
 [node name="DeathScreen" parent="." groups=["death_screen"] instance=ExtResource("10_35w0s")]
 
 [node name="EquipmentUI" parent="." groups=["EquipmentUI"] instance=ExtResource("11_tbob4")]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="."]
+environment = SubResource("Environment_dhx6v")

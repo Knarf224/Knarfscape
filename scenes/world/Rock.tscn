@@ -1,21 +1,18 @@
-[gd_scene load_steps=5 format=3 uid="uid://cr6auq5756sg3"]
+[gd_scene load_steps=4 format=3 uid="uid://cr6auq5756sg3"]
 
 [ext_resource type="Script" path="res://scenes/world/rock.gd" id="1_qktto"]
-
-[sub_resource type="SphereMesh" id="SphereMesh_3xoj2"]
-
-[sub_resource type="ORMMaterial3D" id="ORMMaterial3D_1ne3o"]
-albedo_color = Color(0.493545, 0.493546, 0.493546, 1)
+[ext_resource type="PackedScene" uid="uid://bdco6wvvfnxfh" path="res://assets/nature/GLTF format/rock_smallA.glb" id="2_71py3"]
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_5gr5t"]
+radius = 0.137166
 
 [node name="Rock" type="StaticBody3D"]
 script = ExtResource("1_qktto")
 
-[node name="MeshInstance3D" type="MeshInstance3D" parent="."]
-transform = Transform3D(1, 0, 0, 0, 0.7, 0, 0, 0, 0.9, 0, 0, 0)
-mesh = SubResource("SphereMesh_3xoj2")
-surface_material_override/0 = SubResource("ORMMaterial3D_1ne3o")
+[node name="rock_smallA2" parent="." instance=ExtResource("2_71py3")]
+transform = Transform3D(3, 0, 0, 0, 3, 0, 0, 0, 3, 0, 0, 0)
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="."]
 shape = SubResource("SphereShape3D_5gr5t")
+
+[editable path="rock_smallA2"]

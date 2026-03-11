@@ -14,3 +14,9 @@ export_credentials.cfg
 .mono/
 data_*/
 mono_crash.*.json
+
+# Downloaded Godot plugins (install manually via AssetLib)
+addons/
+
+# Plugin demo scenes
+demo/
